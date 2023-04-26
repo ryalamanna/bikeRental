@@ -16,7 +16,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     })
 }
 app.get('/', (req: Request, res: Response) => {
-    res.send('hii')
+    res.send('hiiiiiii')
 })
 
 const port : number = Number(process.env.por || 3000);
