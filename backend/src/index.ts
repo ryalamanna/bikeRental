@@ -2,7 +2,7 @@ import express, { Request, Response, Application, NextFunction, ErrorRequestHand
 import { Server } from 'http';
 import createHttpError from 'http-errors';
 import {config} from 'dotenv'
-import {db} from '../db_config'
+import {runQuery} from './db_config'
 const app: Application = express();
 config();
 // app.use((req: Request, res: Response, next: NextFunction) => {
@@ -18,17 +18,16 @@ config();
 // }
 app.get('/', (req: Request, res: Response) => {
     
-    db.query('SELECT * FROM users', (err, result) => {
-        if(err){
-            console.log(err);
+    runQuery('SELECT * FROM users', [] , (err: Error | null, result ) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(result);
         }
-        else{
-            res.send(result)
-        }
-    })
+      });
 })
 
-const port : number = Number(process.env.por || 3000);
+const port : number = Number(process.env.PORT || 3000);
 const server: Server = app.listen(port, () => {
     console.log('listening on port' , port);
 })
