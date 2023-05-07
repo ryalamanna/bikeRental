@@ -1,21 +1,19 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 import { config } from 'dotenv';
 
 config();
 
-export const db = mysql.createPool({
+const pool = mysql.createPool({
   host: process.env.HOST,
   user: process.env.USER,
   password: process.env.PASSWORD,
   database: 'bike_rental_db',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-export function runQuery(query: string, params: any[], callback: (error: Error | null, result?: any) => void): void {
-  db.query(query, params, (err, result) => {
-    if (err) {
-      callback(err);
-    } else {
-      callback(null, result);
-    }
-  });
+export async function runQuery(query: string, params: any[]): Promise<any> {4
+  const [rows] = await pool.execute(query, params);
+  return rows;
 }
